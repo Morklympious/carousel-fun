@@ -1,18 +1,17 @@
-var fs = require('fs'),
-  browserify = require('browserify'),
-  shell = require('shelljs');
+var fs         = require('fs'),
+    shell      = require('shelljs'),
+    browserify = require('browserify');
 
 
-var build = browserify("./src/entry.js", {
+var builder = browserify("./src/entry.js", {
   debug: true
 });
 
-/* Create directories for output */
-shell.mkdir('-p', 'dist/css');
-
-build.plugin("modular-css/browserify", {
-
-    // Output CSS file with all of your fancy scoped classes.
+/**
+ * Plugins for browserify!
+ */
+builder.plugin("modular-css/browserify", {
+  // Output CSS file with all of your fancy scoped classes.
   css: "./dist/css/site.css",
 
   map: true,
@@ -21,14 +20,43 @@ build.plugin("modular-css/browserify", {
   ]
 });
 
-build.bundle(function(err, output) {
+/**
+ * This is a build function that just uses shell.js to run a bunch of
+ * file manipulation code. 
+ * 
+ * I understand this could be done natively with the fs module, but 
+ * shell commands are usually easier for developers to grok. 
+ */
+function _output() {
+  shell.mkdir('-p', 'dist/css');
+}
+
+/**
+ * This is a function that tells browserify to take our entry.js file and
+ * process all of its dependencies so it's prepped and ready for the browser
+ */
+function _bundle() {
   var write = fs.writeFileSync;
 
-  if (err) { 
-    console.log(err);
-    return;
-  }
+  builder.bundle(function(err, output) {
+    var now = new Date();
+    var t   = (`${now.getHours()  }:${  now.getMinutes()  }:${  now.getSeconds()}`);
 
-  write('./dist/bundle.js', output);
-  console.log('Bundle built!');
-});
+    if(err) {
+      console.log(err);
+      return;
+    }
+
+    write("./dist/bundle.js", output);
+  });
+}
+
+// Run once so we can get the bundle. 
+_output();
+_bundle(); 
+
+module.exports = {
+  output: _output,
+  bundle: _bundle
+}
+

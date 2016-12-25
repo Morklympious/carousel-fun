@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run lint && node build-bundle.js",
-    "develop": "node build-server.js",
+    "serve": "node build-server.js",
     "lint": "eslint src/"
   },
   "repository": {
