@@ -1,7 +1,8 @@
 var fs         = require('fs'),
     shell      = require('shelljs'),
-    browserify = require('browserify');
+    browserify = require('browserify'),
 
+    debounce    = require("lodash.debounce");
 
 var builder = browserify("./src/entry.js", {
   debug: true
@@ -29,6 +30,7 @@ builder.plugin("modular-css/browserify", {
  */
 function _output() {
   shell.mkdir('-p', 'dist/css');
+  shell.cp('-u', 'index.html', 'dist/index.html');
 }
 
 /**
@@ -56,7 +58,8 @@ _output();
 _bundle(); 
 
 module.exports = {
-  output: _output,
-  bundle: _bundle
+  output: debounce(_output, 750),
+  bundle: debounce(_bundle, 750),
+  builder: builder
 }
 

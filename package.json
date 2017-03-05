@@ -4,8 +4,8 @@
   "description": "A project scaffolding tool using Browserify and Modular-css",
   "main": "index.js",
   "scripts": {
-    "build": "npm run lint && node build-bundle.js",
-    "serve": "node build-server.js",
+    "build": "npm run lint && node build-scripts/build-default.js",
+    "serve": "node build-scripts/build-server.js",
     "lint": "eslint src/"
   },
   "repository": {
@@ -20,10 +20,12 @@
   "author": "Bradley Stafford",
   "license": "MIT",
   "devDependencies": {
+    "browser-sync": "^2.18.8",
     "browserify": "^13.0.0",
     "ecstatic": "^1.4.0",
     "eslint": "^2.9.0",
     "express": "^4.13.4",
+    "lodash.debounce": "^4.0.8",
     "minifyify": "^7.3.2",
     "mithril": "^0.2.2-rc.1",
     "modular-css": "^0.21.0",
