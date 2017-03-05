@@ -14,7 +14,8 @@ Pretty simple, actually!
 
 - `npm install` for grabbing the dependencies.
 - `npm run build` to output your bundled scripts into the `dist` directory.
-- `npm run develop` to watch your files, rebuild on save, and also run a server at `:8080`
+- `npm run serve` to watch your files, rebuild on save, and also run a server at `:3000`
+  - This also starts a filewatcher that will automatically reload the browser you're viewing your app in when changes are detected in parts of the `src` or `dist` directory.
 - `npm run lint` to run a fine-toothed comb through it via Eslint.
 
 ## Opinions
