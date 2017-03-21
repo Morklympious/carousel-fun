@@ -8,7 +8,7 @@ var m = require('mithril');
    This will output to site.css in dist/css as a bunch of classes with
    unique prefixes (jkfjei32jlsd_example) (so they target whichever element you want perfectly)
  */
-var css = require('./css/example.css');
+var css = require('./css/carousel.css');
 
 /*
   We require global CSS here without assigning because
@@ -33,25 +33,17 @@ require('./css/global.css');
 
 */
 
+var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    slides  = numbers.map(function(number) {
+      return m("div", {class: css["carousel-slide"]}, "Slide " + number);
+    })
+
 m.mount(global.document.getElementById('mount'), {
   view: function() {
-    return m('div', {class: css.container}, [
-      m('h1', {class: css.heading}, 'Welcome to Stackpack'),
-      m('p', {class: css.paragraph}, [
-        'This is Stackpack! ',
-        'Its a boilerplate to use CSS classes in js via file hash. ',
-        'by requiring CSS in a module, ',
-        'the classes of that CSS file are scoped to that module. ',
-        'No more CSS collisions. If there are any, its definitely your fault '
-      ]),
-      m('p', {class: css.paragraph}, [
-        'This is probably most useful to you if you wanteverything in js ',
-        'including using your css classes for things created in a Virtual Dom. '
-      ]),
-      m('p', {class: css.paragraph}, [
-        'Using Mithril. Or React. or Vdom. Or. uh. Whatever. '
-      ]),
-      require('./js/explanation') // Works just fine via require, too!
+    return m("div", {class: css["wrapper"]}, [
+      m('div', {class: css["carousel-container"]}, [
+        m("div", {class: css["carousel-wrapper"]}, slides)
+      ])
     ]);
   }
 });
