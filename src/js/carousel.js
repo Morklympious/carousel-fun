@@ -1,4 +1,6 @@
 var dom = require('./utilities/dom');
+var translate = require('./translate');
+var events = require('./events');
 
 
 function Carousel(root, opts) {
@@ -44,8 +46,7 @@ function __init(items) {
   this.listeners(); 
 }
 
-function __listeners() {
-  var events = window.evts(); 
+function __listeners() { 
   var self = this; 
 
   self.root.addEventListener(events.start, function(e) {
@@ -54,15 +55,13 @@ function __listeners() {
 
   self.root.addEventListener(events.move, function(e) {
     if(!self.dragging) return; 
-    console.log('ay');
-    window.motion.translate(e.currentTarget, e.clientX - e.currentTarget.offsetWidth / 2);
+    console.log(e.currentTarget, e.target);
+    translate(e.currentTarget, e.target.offsetX-10);
   })
 
   self.root.addEventListener(events.end, function(e) {
-
     self.dragging = false; 
-  })
-
+  });
 
 }
 
