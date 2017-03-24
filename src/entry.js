@@ -35,7 +35,7 @@ require('./css/global.css');
 
 var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     slides  = numbers.map(function(number) {
-      return m("div", {class: css["carousel-slide"]}, "Slide " + number);
+      return m("div", {class: css["carousel-slide"] + ' carousel-slide'}, "Slide " + number);
     })
 
 m.mount(global.document.getElementById('mount'), {
@@ -46,8 +46,8 @@ m.mount(global.document.getElementById('mount'), {
       },
       class: css["wrapper"]
     }, [
-      m('div', {class: css["carousel-container"]}, [
-        m("div", {class: css["carousel-wrapper"]}, slides)
+      m('div', {class: css["carousel-container"] + ' carousel-container'}, [
+        m("div", {class: css["carousel-wrapper"] + ' carousel-wrapper'}, slides)
       ])
     ]);
   }

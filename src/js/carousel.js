@@ -19,7 +19,7 @@ function Carousel(root, opts) {
 
   this.options = Object.assign({}, defaults, opts);
 
-  this.dragging = false; 
+  this.dragging = false;
 
   this.root = root;
   this.wrapper = dom.find(root, this.options.classes.wrapper)
@@ -33,34 +33,55 @@ function Carousel(root, opts) {
 }
 
 function __init(items) {
-  var self = this;  
-  console.log(self.options)
+  var self = this;
 
   items.forEach(function(item) {
     var spacing = self.options.spacing.between
-
+    console.log('client width', self.root.clientWidth, 'visibles', self.options.visibles, 'spacing betweetn', spacing, 'width', ((self.root.clientWidth - ((self.options.visibles - 1) * spacing) / self.options.visibles) + "px"));
     item.style['margin-right'] = spacing + "px";
-    item.style['width'] = (self.root.clientWidth - (self.options.visibles - 1) * spacing) / self.options.visibles + "px";
+    item.style['width'] = ((self.root.clientWidth - ((self.options.visibles - 1) * spacing) / self.options.visibles) + "px");
   });
 
-  this.listeners(); 
+  this.listeners();
 }
 
-function __listeners() { 
-  var self = this; 
+function __listeners() {
+  var self = this,
+      mousedown = {
+        x: 0
+      },
+      state = {
+        offset: 0,
+        distance: 0
+      }
+
+  // find anchor point on down, subtract from mousemove.
+  var down = {
+    x: 0
+  }
+  var offset = 0;
+  var distance = 0;
 
   self.root.addEventListener(events.start, function(e) {
-    self.dragging = true; 
+    self.dragging = true;
+    mousedown.x = e.clientX;
   });
 
   self.root.addEventListener(events.move, function(e) {
-    if(!self.dragging) return; 
-    console.log(e.currentTarget, e.target);
-    translate(e.currentTarget, e.target.offsetX-10);
+    if(!self.dragging) return;
+
+    state.distance = e.clientX - mousedown.x;
+    translate(self.wrapper, state.offset + state.distance);
   })
 
   self.root.addEventListener(events.end, function(e) {
-    self.dragging = false; 
+    self.dragging = false;
+    state.offset = state.offset + state.distance;
+  });
+
+  self.root.addEventListener('mouseleave', function(e) {
+    self.dragging = false;
+    state.offset = state.offset + state.distance;
   });
 
 }
@@ -68,4 +89,4 @@ function __listeners() {
   // slide size is (carousel size - (slides-per-view - 1) * spacing) / slides-per-view;
 
 
-module.exports = Carousel; 
+module.exports = Carousel;

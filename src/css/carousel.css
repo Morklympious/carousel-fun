@@ -1,6 +1,7 @@
 .wrapper {
   width: 800px;
-  margin: 0 auto; 
+  height: 300px;
+  margin: 0 auto;
 }
 
 
@@ -12,6 +13,7 @@
   position: relative;
   overflow: hidden;
   z-index: 1;
+  background-color: #777;
 }
 
 .carousel-slide {
@@ -30,6 +32,12 @@
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
 }
 
 .carousel-wrapper {
