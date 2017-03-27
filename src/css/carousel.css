@@ -1,12 +1,12 @@
 .wrapper {
-  width: 800px;
+  width:1040px;
   height: 300px;
   margin: 0 auto;
 }
 
 
 .carousel-container {
-  height: 150px;
+  height: 300px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -14,6 +14,7 @@
   overflow: hidden;
   z-index: 1;
   background-color: #777;
+  padding: 8px; 
 }
 
 .carousel-slide {
