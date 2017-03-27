@@ -45,8 +45,8 @@ function _touch() {
 /**
  * Retrieve Touchscreen events that enable drag in a standard object format. 
  */
-function events() {
+function normalize() {
     return supports.touch ? _touch() : _nontouch(); 
 }
 
-module.exports = events(); 
+module.exports = normalize(); 
