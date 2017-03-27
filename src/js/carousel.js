@@ -17,25 +17,38 @@ var defaults = {
 };
 
 function Carousel(root, opts) {
-  var C = this; 
+  var C = this;
 
   C.options = Object.assign({}, defaults, opts);
 
-  C.dragging = false; 
   C.dom = {
     root: root,
     wrapper: dom.find(root, C.options.classes.wrapper),
     items: dom.find(root, C.options.classes.items),
   }
 
+  C.state = {
+    dragging: false,
+    drag: {
+      /** At what position in the carousel did we begin to drag **/
+      startpos: 0,
+
+      /** how far did we move after starting the drag */
+      movedpos: 0,
+
+      /** what's the offset introduced via translation */
+      offset: 0,
+    }
+  }
+
   init(C, C.dom.items);
-  listeners(C); 
+  listeners(C);
 }
 
 function init(Carousel, items) {
   var count   = items.length,
       spacing = Carousel.options.spacing.between,
-      spv     = Carousel.options.slidesPerView, 
+      spv     = Carousel.options.slidesPerView,
 
       /** Single Carousel Item */
       carouselItem = {
@@ -60,9 +73,9 @@ function init(Carousel, items) {
     item.style.width = carouselItem.width;
   });
 
-  Carousel.dom.wrapper.style['width'] = ((items[0].clientWidth + spacing) * count) + "px"; 
+  Carousel.dom.wrapper.style['width'] = ((items[0].clientWidth + spacing) * count) + "px";
 
-  
+
 }
 
-module.exports = Carousel; 
+module.exports = Carousel;
