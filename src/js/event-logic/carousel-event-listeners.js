@@ -1,32 +1,46 @@
-var events = require('./normalize-events.js');
-var translate = require('../animation/translate');
+var events      = require('./normalization/normalize-drag-events'),
+    coordinates = require('./normalization/event-coordinates'),
+    translate   = require('../animation/translate');
 
-function listeners(Carousel) {
-  var dom = Carousel.dom,
-      state = Carousel.state;
+// TODO: Make part of carousel.
 
-  dom.root.addEventListener(events.start, function(e) {
-    state.dragging = true;
-    state.drag.startpos = e.clientX;
+
+function listeners() {
+
+  var listen = this.dom.root.addEventListener,
+      slides = this.dom.wrapper;
+
+
+
+  var dragging = this.state.dragging,
+      offsetPosition = this.state.offsetPosition,
+      startPosition = this.state.startPosition,
+      movedPosition = this.state.movedPosition;
+
+  listen(events.start, function(e) {
+      var position = coordinates(e);
+
+      /** Beginning a drag */
+      dragging = true;
+      startPosition = position.x;
   });
 
-  dom.root.addEventListener(events.move, function(e) {
-    if(!state.dragging) return;
+  listen(events.move, function(e) {
+      var position = coordinates(e);
 
-    state.movedpos = e.clientX - state.drag.startpos;
-    translate(dom.wrapper, state.drag.offset + state.movedpos);
+      /** If we're not flagged as dragging, do nothing */
+      if(!dragging) return;
+      movedPosition = position.x - startPosition;
+
+      translate(slides, offsetPosition + movedPosition)
   });
 
-  dom.root.addEventListener(events.end, function(e) {
-    state.dragging = false;
-    state.offset = state.offset + state.movedpos;
-  });
+  listen(events.end, function(e) {
+      offsetPosition = offsetPosition + movedPosition;
 
-  dom.root.addEventListener('mouseleave', function(e) {
-    state.dragging = false;
-    state.offset = state.offset + state.movedpos;
+      /** Ending a drag */
+      dragging = false;
   });
-
 }
 
 module.exports = listeners;

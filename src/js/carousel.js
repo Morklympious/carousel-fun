@@ -5,9 +5,13 @@ var round = require('./utilities/round-number');
 
 
 var defaults = {
-  slidesPerView: 3,
+  slidesPerView: 4,
+  peek: {
+    right: true,
+    left: false,
+  },
   spacing: {
-    between: 30
+    between: 12
   },
   classes: {
     container: '.carousel-container',
@@ -29,20 +33,13 @@ function Carousel(root, opts) {
 
   C.state = {
     dragging: false,
-    drag: {
-      /** At what position in the carousel did we begin to drag **/
-      startpos: 0,
-
-      /** how far did we move after starting the drag */
-      movedpos: 0,
-
-      /** what's the offset introduced via translation */
-      offset: 0,
-    }
+    startPosition: 0,
+    movedPosition: 0,
+    offsetPosition: 0
   }
 
   init(C, C.dom.items);
-  listeners(C);
+  listeners.call(this);
 }
 
 function init(Carousel, items) {
@@ -56,16 +53,6 @@ function init(Carousel, items) {
         width: round((Carousel.dom.root.clientWidth - (spv - 1) * spacing) / spv) + "px"
       }
 
-  // Reflow / Resize slide elements based on:
-  // - slides per view (need to use the wrapper width to determine width of items based on per-view)
-  // - Number of total slides
-
-  // Initialize Event listeners
-  // - Need to have state for:
-  //    - Drag/mousedown occurring
-  //    - Last pixel position translated to (to stop jarring transitions. )
-
-
   items.forEach(function(item) {
     var dom = Carousel.dom;
 
@@ -74,8 +61,6 @@ function init(Carousel, items) {
   });
 
   Carousel.dom.wrapper.style['width'] = ((items[0].clientWidth + spacing) * count) + "px";
-
-
 }
 
 module.exports = Carousel;

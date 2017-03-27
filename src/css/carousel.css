@@ -1,5 +1,5 @@
 .wrapper {
-  width:1040px;
+  width: 1040px;
   height: 300px;
   margin: 0 auto;
 }
@@ -14,7 +14,7 @@
   overflow: hidden;
   z-index: 1;
   background-color: #777;
-  padding: 8px; 
+  padding: 8px;
 }
 
 .carousel-slide {
@@ -22,7 +22,7 @@
   font-size: 18px;
   display: inline-block;
   height: 100%;
-  background: #fff;
+  background: mistyrose;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */

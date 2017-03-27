@@ -1,5 +1,5 @@
 var m = require('mithril');
-var C = require('./js/carousel')
+var Carousel = require('./js/carousel')
 
 /*
    This CSS is now scoped to the things in this module via file-hash
@@ -40,15 +40,28 @@ var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 
 m.mount(global.document.getElementById('mount'), {
   view: function() {
-    return m("div", {
-      config: function(element, initialized) {
-        C(element);
-      },
-      class: css["wrapper"]
-    }, [
-      m('div', {class: css["carousel-container"] + ' carousel-container'}, [
-        m("div", {class: css["carousel-wrapper"] + ' carousel-wrapper'}, slides)
+    return m("div", [
+      m("div", {
+        config: function(element, initialized) {
+           new Carousel(element);
+        },
+        class: css["wrapper"]
+      }, [
+        m('div', {class: css["carousel-container"] + ' carousel-container'}, [
+          m("div", {class: css["carousel-wrapper"] + ' carousel-wrapper'}, slides)
+        ])
+      ]),
+      m("div", {
+        config: function(element, initialized) {
+          new Carousel(element);
+        },
+        class: css["wrapper"]
+      }, [
+        m('div', {class: css["carousel-container"] + ' carousel-container'}, [
+          m("div", {class: css["carousel-wrapper"] + ' carousel-wrapper'}, slides)
+        ])
       ])
-    ]);
+    ])
+
   }
 });

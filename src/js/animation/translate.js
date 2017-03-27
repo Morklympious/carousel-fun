@@ -1,6 +1,6 @@
 function translate(element, distance) {
   var translation = 'translate3d(' + distance + 'px, 0, 0)'
-  var style = element.style; 
+  var style = element.style;
 
   style.WebkitTransform = translation;
   style.MozTransform = translation;
@@ -9,5 +9,5 @@ function translate(element, distance) {
   style.transform = translation;
 }
 
-module.exports = translate; 
+module.exports = translate;
 
