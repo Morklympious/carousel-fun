@@ -1,122 +1,71 @@
 var dom = require('./utilities/dom');
-var initializeListeners = require('./event-logic/carousel-event-listeners');
-
-var defaults = {
-  slidesPerView: 2,
-  itemSpacing: 12,
-  classes: {
-    container: '.carousel-container',
-    items: '.carousel-slide',
-    wrapper: '.carousel-wrapper',
-  }
-};
+var listeners = require('./event-logic/carousel-event-listeners');
+var defaults = require('./options/carousel-defaults');
 
 function Carousel(root, opts) {
   var self = this;
 
-  self.options = _merge(defaults, opts);
-  self.dom = _refs(root, self.options);
-  self.state = _state(self);
+  self.options = Object.assign({}, defaults, opts);
 
-  initializeCarousel(self);
-  initializeListeners(self);
+  /** DOM Elements */
+  self.root = root;
+  self.viewport = dom.find(root, self.options.classes.wrapper);
+  self.items = dom.find(root, self.options.classes.items);
 
+  /** State flags */
+  self.dragging = false;
+
+  /** Values for dragging */
+  self.translate = 0;  
+  self.eStartPos = 0;
+  self.eEndPos = 0; 
+
+  /** Methods */
+  self.listeners = listeners.bind(self);
+  self.initialize = initialize.bind(self);
+  //initializeCarousel(self);
+
+  self.initialize(); 
+  self.listeners();
 }
 
-function _merge(one, two) {
-  return Object.assign({}, one, two);
+function _size(element, dimensions) {
+  var width = dimensions.width || element.style.width,
+      height = dimensions.height || element.style.height;
+
+  element.style.width = width + 'px';
+  element.style.height = height + 'px';
 }
 
-/**
- * Setup Function: _refs
- *
- * Sets up important DOM references for a Carousel instance
- *
- * @param root {Element} - A DOM element representing the root element of Carousel
- * @param options {object} - The options object attached to the Carousel instance
- *
- * @return {object} - an object representing the root, wrapper, and items of a carousel.
- */
-function _refs(root, options) {
-  var classes = options.classes;
+function initialize(Carousel) {
+  var self = this; 
 
-    return {
-      root: root,
-      wrapper: dom.find(root, classes.wrapper),
-      items: dom.find(root, classes.items),
-    }
-}
+  var visibleWidth = self.viewport.clientWidth;
+  var spv = self.options.slidesPerView;
+  var itemSpacing = self.options.itemSpacing
 
-function _state(Carousel) {
-  return {
-      bounds: {
-        lower: 0,
-        upper: 0
-      },
-      dragging: false,
-      position: {
-        start: 0,
-        moved: 0,
-        offset: 0
-      }
-  }
-}
+  /** 
+   * Visible viewport width minus the product of multiplying
+   * the number of slides to show per-view (minus one because the rightmost
+   * won't have right margins shown) by the right-margin each slide needs to space itself. 
+   * 
+   * Divided all by the slides per view and you get the total space (content + margin) 
+   * each slide needs. 
+   */
+  var viewportSize = (visibleWidth - ((spv - 1) * itemSpacing)) / spv; 
 
-function _size(element, sizes) {
-  var width = sizes.width,
-      height = sizes.height;
-}
-
-/** TODO: refactor to look less like hot shit.  */
-function initializeCarousel(Carousel) {
-  var items   = Carousel.dom.items;
-  var count   = items.length;
-  var spacing = Carousel.options.itemSpacing;
-
-  // if(Carousel.options.peek.right) {
-  //   carouselItem.width = round(((Carousel.dom.root.clientWidth - (4 * spacing)) - (spv - 1) * spacing) / spv)
-  // }
-
-  var w = ((Carousel.dom.wrapper.clientWidth) - (Carousel.options.slidesPerView - 1) * spacing) / Carousel.options.slidesPerView;
-
-  _setCarouselItemSize(Carousel);
-  _setCarouselWrapperSize(Carousel);
-
-  Carousel.dom.wrapper.style['width'] = ((w + spacing) * count) + (4 * spacing) + "px";
-  Carousel.state.bounds.upper = (((w + spacing) * count) - w) ;
-}
-
-function _setCarouselItemSize(Carousel) {
-  var root  = Carousel.dom.root;
-  var items = Carousel.dom.items;
-  var options = Carousel.options;
-  var spv = options.slidesPerView;
-  console.log(root.clientWidth);
-  var spec = {
-    marginRight: options.itemSpacing + "px",
-    width: Math.floor(((root.clientWidth - 80) - (spv - 1) * options.itemSpacing) / spv) + "px"
-  };
-
-  items.forEach(function(item) {
-    Object.assign(item.style, spec);
+  self.items.forEach(function(item) {
+    item.style['margin-right'] = itemSpacing + 'px'; 
+    _size(item, {
+      width: Math.floor(viewportSize)
+    });
   });
 
+  _size(self.viewport, { width: (viewportSize * self.items.length) + self.items.length * itemSpacing});
+  console.log(self.viewport);
+
+  // Size Carousel Wrapper and Carousel Items
+  // Set Carousel boundaries (upper and lower) 
 }
-
-function _setCarouselWrapperSize(Carousel) {
-  var wrapperWidth = Carousel.dom.wrapper.clientWidth;
-  var spv = (Carousel.options.slidesPerView - 1);
-  var spaceBetweenItems = Carousel.options.itemSpacing;
-
-  /**
-   * The width of the (visible part of the carousel) wrapper, minus spv-1 (because of 0 indexing)
-   * multiplied by the space each item needs after it divided by the total slides in a given view will
-   * give us the width each slide needs to be
-   */
-  var w = (wrapperWidth - (spv - 1) * spaceBetweenItems) / spv;
-
-}
-
-
 
 module.exports = Carousel;
