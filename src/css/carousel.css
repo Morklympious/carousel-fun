@@ -32,6 +32,10 @@
           user-select: none;
 }
 
+.carousel-slide:last-child {
+  margin: 0 !important; 
+}
+
 .carousel-wrapper {
     position: relative;
     width: 100%;

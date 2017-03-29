@@ -14,16 +14,21 @@ function Carousel(root, opts) {
 
   /** State flags */
   self.dragging = false;
+  
 
   /** Values for dragging */
   self.translate = 0;  
+  self.maxTranslate = 0; 
+  self.minTranslate = 0;
   self.eStartPos = 0;
   self.eEndPos = 0; 
+  
 
   /** Methods */
   self.listeners = listeners.bind(self);
   self.initialize = initialize.bind(self);
-  //initializeCarousel(self);
+  self.updateSize = null;
+
 
   self.initialize(); 
   self.listeners();
@@ -62,10 +67,12 @@ function initialize(Carousel) {
   });
 
   _size(self.viewport, { width: (viewportSize * self.items.length) + self.items.length * itemSpacing});
-  console.log(self.viewport);
 
-  // Size Carousel Wrapper and Carousel Items
   // Set Carousel boundaries (upper and lower) 
+  self.maxTranslate = 0;
+  self.minTranslate = -((viewportSize * self.items.length) + self.items.length * itemSpacing) + (self.root.clientWidth);
 }
+
+
 
 module.exports = Carousel;
