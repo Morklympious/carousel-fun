@@ -111,11 +111,20 @@ function _elements(collection) {
   return elements;
 }
 
+
+function _merge(destination, source) {
+  destination = destination || {}; 
+  source = source || {};
+  Object.keys(source).forEach(function(key) { destination[key] = source[key]; });
+  return destination;
+}
+
 module.exports = {
   each     : _each,
   uniques  : _uniques,
   exclude  : _exclude,
   unwrap   : _unwrap,
   nodes    : _nodes,
-  elements : _elements
+  elements : _elements,
+  merge    : _merge
 };
