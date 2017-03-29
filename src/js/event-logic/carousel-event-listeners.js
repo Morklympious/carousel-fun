@@ -20,29 +20,43 @@ function listeners() {
 
   listenOn(root, events.start, function(e) {
       var pos = coordinates(e);
-
       /** flag-a-drag, recording the x position of when we started */
       self.dragging = true;
+
+      /** 
+       * Necessary to make them both the same because holdover from previous
+       * drags would otherwise make the carousel 'jump'
+       */
       self.eStartPos = pos.x;
+      self.eEndPos = pos.x;
   });
 
   listenOn(root, events.move, function(e) {
     var pos = coordinates(e);
-    var distance = pos.x - self.eStartPos
+    var delta = self.eEndPos - self.eStartPos; 
+    var distance = self.translate + delta;
 
     /** If we're not flagged as dragging, do nothing */
     if(!self.dragging) return;
-    
-    translate(slides, self.translate + distance);
+
+    if(distance < self.minTranslate) {
+      distance = self.minTranslate;
+      self.boundedLow = true; 
+    } else self.boundedLow = false; 
+
+    if(distance > self.maxTranslate) {
+      distance = self.maxTranslate;
+      self.boundedHigh = true; 
+    } else self.boundedHigh = false; 
+
+    self.eEndPos = pos.x;
+    translate(slides, distance);
   });
 
   listenOn(root, events.end, function(e) {
-    var pos = coordinates(e);
-    
-    /** unflag-a-drag, and let's record the x position of when we stopped */
+    /** unflag-a-drag */
     self.dragging = false;
-    self.eEndPos = pos.x;
-    
+
     /** 
     * We recorded the X position of our start and stop positions because we need to know:
     * 1. How far we translated (eEndPos - eStartPos)
@@ -50,9 +64,13 @@ function listeners() {
 
     * If we translate again later, we'll know what value to begin translating from 
     */
+    if(self.boundedLow || self.boundedHigh) {
+      self.translate = self.boundedLow ? self.minTranslate : self.maxTranslate
+      self.eEndPos = 0;
+      self.eStartPos = 0; 
+      return;
+    }
     self.translate = self.translate + (self.eEndPos - self.eStartPos);
-
-    console.log(self)
   });
 }
 
