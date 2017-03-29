@@ -1,11 +1,12 @@
 var dom = require('./utilities/dom');
 var listeners = require('./event-logic/carousel-event-listeners');
 var defaults = require('./options/carousel-defaults');
+var merge = require('./utilities/helpers').merge
 
 function Carousel(root, opts) {
   var self = this;
 
-  self.options = Object.assign({}, defaults, opts);
+  self.options = merge({}, merge(defaults, opts));
 
   /** DOM Elements */
   self.root = root;
