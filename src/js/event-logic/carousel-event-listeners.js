@@ -2,45 +2,64 @@ var events      = require('./normalization/normalize-drag-events'),
     coordinates = require('./normalization/event-coordinates'),
     translate   = require('../animation/translate');
 
-// TODO: Make part of carousel.
+/**
+ * Helper function to make addEventListener less verbose
+ */
+function listenOn(element, event, fn) {
+  return element.addEventListener(event, fn);
+}
 
+function bounded(value, lower, upper) {
+  return (lower <= value && value <= upper);
+}
 
-function listeners() {
-
-  var listen = this.dom.root.addEventListener,
-      slides = this.dom.wrapper;
-
-
-
-  var dragging = this.state.dragging,
-      offsetPosition = this.state.offsetPosition,
-      startPosition = this.state.startPosition,
-      movedPosition = this.state.movedPosition;
-
-  listen(events.start, function(e) {
-      var position = coordinates(e);
+function ondragstart(Carousel, root, state) {
+  listenOn(root, events.start, function(e) {
+      var pos = coordinates(e);
 
       /** Beginning a drag */
-      dragging = true;
-      startPosition = position.x;
-  });
-
-  listen(events.move, function(e) {
-      var position = coordinates(e);
-
-      /** If we're not flagged as dragging, do nothing */
-      if(!dragging) return;
-      movedPosition = position.x - startPosition;
-
-      translate(slides, offsetPosition + movedPosition)
-  });
-
-  listen(events.end, function(e) {
-      offsetPosition = offsetPosition + movedPosition;
-
-      /** Ending a drag */
-      dragging = false;
+      state.dragging = true;
+      state.position.start = pos.x;
+      console.log(state);
   });
 }
 
-module.exports = listeners;
+function ondragmove(Carousel, root, state) {
+  var slides = Carousel.dom.wrapper;
+
+  listenOn(root, events.move, function(e) {
+    var pos = coordinates(e),
+        newPosition = state.position.offset + state.position.moved;
+
+    /** If we're not flagged as dragging, do nothing */
+    if(!state.dragging) return;
+
+    state.position.moved = pos.x - state.position.start;
+
+    console.log(state.position.offset, state.position.moved)
+    if(bounded(newPosition, -state.bounds.upper, state.bounds.lower)) {
+      translate(slides, state.position.offset + state.position.moved)
+    }
+
+  });
+}
+
+function ondragend(Carousel, root, state) {
+  listenOn(root, events.end, function(e) {
+     state.dragging = false;
+     state.position.offset =state.position.offset + state.position.moved;
+  });
+}
+
+/**
+ * Initialize all drag-based listeners
+ */
+function initializeListeners(Carousel) {
+  var root = Carousel.dom.root;
+
+  ondragstart(Carousel, root, Carousel.state);
+  ondragmove(Carousel, root, Carousel.state);
+  ondragend(Carousel, root, Carousel.state);
+}
+
+module.exports = initializeListeners;

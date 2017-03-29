@@ -1,7 +1,8 @@
 .wrapper {
-  width: 1040px;
+  width: 100%;
   height: 300px;
   margin: 0 auto;
+  touch-action: none;
 }
 
 
