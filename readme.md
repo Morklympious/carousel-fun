@@ -104,6 +104,7 @@ This will allow me to create a callable function that can branch and return the 
 After I figure these things out I can start fleshing out some more robust concepts / lifecycle methods as they relate to the carousel.
 
 # 3/27/2017
+Lost a lot of time due to other more urgent projects.
 
 My most recent thoughts on the matter is that programmatically setting slides CSS is the way to go, as it allows for functionality to be broken into small iotas and called as appropriate (e.g. when screen size changes, when a reflow or repaint occurs, or if the developer needs to reinitialize some or all parts of the logic). I've gotten a small `translate` approach going, but there will need to be more enforcement around something close to a lifecycle for this component.
 
@@ -114,3 +115,7 @@ Ideally, we'd be able to hook functionality in at various points in the lifecycl
 - `onsomething`
 
 ad infinitum until we're pleased with the level of flexibility this approach can achieve.
+
+# 3/28/2017
+
+I'm putting in the peek functionality, and I've considered a few approaches. for context, a 'peek' view is what allows users to see the beginnings of another slide while the carousel is focused on some other part of it.
