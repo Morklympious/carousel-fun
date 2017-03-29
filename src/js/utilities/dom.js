@@ -29,7 +29,8 @@ function find(element, selector) {
  * 
  * @returns {array|Node} A single element or collection of elements that match the query
  */
-function query(selector, context = document.body) {
+function query(selector, context) {
+  context = context || document.body; 
   return (selector === "body") ? context : find(context, selector);
 }
 
