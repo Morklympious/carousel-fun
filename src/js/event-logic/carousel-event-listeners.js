@@ -3,14 +3,6 @@ var events      = require('./normalization/normalize-drag-events'),
     translate   = require('../animation/translate');
 
 /**
- * Helper function to make addEventListener less verbose
- */
-function listenOn(element, event, fn) {
-  return element.addEventListener(event, fn);
-}
-
-
-/**
  * Initialize all drag-based listeners
  */
 function listeners() {
@@ -18,20 +10,22 @@ function listeners() {
   var root = self.root;
   var slides = self.viewport;
 
-  listenOn(root, events.start, function(e) {
-      var pos = coordinates(e);
-      /** flag-a-drag, recording the x position of when we started */
-      self.dragging = true;
+  /** When the user begins to drag */
+  self.root.addEventListener(events.start, function(e) {
+    var pos = coordinates(e);
+    /** flag-a-drag, recording the x position of when we started */
+    self.dragging = true;
 
-      /** 
-       * Necessary to make them both the same because holdover from previous
-       * drags would otherwise make the carousel 'jump'
-       */
-      self.eStartPos = pos.x;
-      self.eEndPos = pos.x;
+    /** 
+     * Necessary to make them both the same because holdover from previous
+     * drags would otherwise make the carousel 'jump'
+     */
+    self.eStartPos = pos.x;
+    self.eEndPos = pos.x;
   });
 
-  listenOn(root, events.move, function(e) {
+  /** When the user is dragging the carousel */
+  self.root.addEventListener(events.move, function(e) {
     var pos = coordinates(e);
     var delta = self.eEndPos - self.eStartPos; 
     var distance = self.translate + delta;
@@ -51,9 +45,13 @@ function listeners() {
 
     self.eEndPos = pos.x;
     translate(slides, distance);
+
+    e.preventDefault();
+    e.stopPropagation();
   });
 
-  listenOn(root, events.end, function(e) {
+  /** When the user has finished dragging */
+  self.root.addEventListener(events.end, function(e) {
     /** unflag-a-drag */
     self.dragging = false;
 

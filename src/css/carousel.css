@@ -14,8 +14,9 @@
   position: relative;
   overflow: hidden;
   z-index: 1;
-  background-color: #777;
-  padding: 8px;
+  background-color: #f17;
+  border: 8px solid #777;
+  margin: 8px 0;
 }
 
 .carousel-slide {

@@ -1,5 +1,5 @@
 module.exports = {
-  slidesPerView: 2,
+  slidesPerView: 4,
   itemSpacing: 12,
   classes: {
     container: '.carousel-container',
