@@ -21,8 +21,8 @@ function Carousel(root, opts) {
   self.translate = 0;  
   self.maxTranslate = 0; 
   self.minTranslate = 0;
-  self.eStartPos = 0;
-  self.eEndPos = 0; 
+  self.dragStartPos = 0;
+  self.dragEndPos = 0; 
   
 
   /** Methods */

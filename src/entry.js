@@ -43,7 +43,9 @@ m.mount(global.document.getElementById('mount'), {
     return m("div", [
       m("div", {
         config: function(element, initialized) {
-           new Carousel(element);
+           new Carousel(element, {
+             slidesPerView: 5
+           });
         },
         class: css["wrapper"]
       }, [
@@ -53,7 +55,9 @@ m.mount(global.document.getElementById('mount'), {
       ]),
       m("div", {
         config: function(element, initialized) {
-          new Carousel(element);
+          new Carousel(element, {
+            slidesPerView: 3
+          });
         },
         class: css["wrapper"]
       }, [
