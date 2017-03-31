@@ -24,6 +24,7 @@
   font-size: 18px;
   display: inline-block;
   height: 100%;
+  vertical-align: top;
   background: mistyrose;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */

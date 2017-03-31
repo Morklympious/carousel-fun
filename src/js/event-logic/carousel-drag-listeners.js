@@ -1,7 +1,13 @@
 var events      = require('./normalization/normalize-drag-events'),
     coordinates = require('./normalization/event-coordinates'),
-    translate   = require('../animation/translate');
+    translate   = require('../animation/translate'),
 
+    debounce    = require('lodash.debounce');
+
+function prevent(e) {
+  e.preventDefault();
+  e.stopPropagation(); 
+}
 /**
  * Initialize all drag-based listeners
  */
@@ -9,6 +15,9 @@ function listeners() {
   var self = this;
   var root = self.root;
   var slides = self.viewport;
+  
+  window.addEventListener('resize', debounce(self.initialize, 450))
+
 
   /** When the user begins to drag */
   self.root.addEventListener(events.start, function(e) {
@@ -22,6 +31,7 @@ function listeners() {
      */
     self.eStartPos = pos.x;
     self.eEndPos = pos.x;
+    prevent(e);
   });
 
   /** When the user is dragging the carousel */
@@ -46,8 +56,7 @@ function listeners() {
     self.eEndPos = pos.x;
     translate(slides, distance);
 
-    e.preventDefault();
-    e.stopPropagation();
+    prevent(e);
   });
 
   /** When the user has finished dragging */
@@ -69,6 +78,7 @@ function listeners() {
       return;
     }
     self.translate = self.translate + (self.eEndPos - self.eStartPos);
+    prevent(e);
   });
 }
 

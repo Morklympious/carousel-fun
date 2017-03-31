@@ -26,6 +26,8 @@
     "eslint": "^2.9.0",
     "express": "^4.13.4",
     "lodash.debounce": "^4.0.8",
+    "lodash.merge": "^4.6.0",
+    "lodash.throttle": "^4.1.1",
     "minifyify": "^7.3.2",
     "mithril": "^0.2.2-rc.1",
     "modular-css": "^0.21.0",
